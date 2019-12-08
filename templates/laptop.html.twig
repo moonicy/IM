@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/tempusdominus-bootstrap-4.min.css" />
+
+    <title>ИМ</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            Сотрудники
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            Ноутбуки  <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Учет ноутбуков</h1>
+            </div>
+
+            <h2>
+                Ноутбуки
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addLaptop">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>Инв. номер</th>
+                            <th>Фирма</th>
+                            <th>Модель</th>
+                            <th>Дата покупки</th>
+                            <th>Срок службы </br>(в годах)</th>
+                            <th>Кол-во ядер</th>
+                            <th>Память (GB)</th>
+                            <th>Жесткий диск (GB)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="laptop-table">
+                        {% for laptop in laptops %}
+                            <tr data-laptop-id="{{ laptop.id }}">
+                                <td data-laptop-field="number">{{ laptop.number }}</td>
+                                <td data-laptop-field="firm">{{ laptop.firm }}</td>
+                                <td data-laptop-field="model">{{ laptop.model }}</td>
+                                <td data-laptop-field="dateBuy">{{ laptop.dateBuy|date('Y-m-d') }}</td>
+                                <td data-laptop-field="interval">{{ laptop.interval|date('%d') }}</td>
+                                <td data-laptop-field="numberCores">{{ laptop.numberCores }}</td>
+                                <td data-laptop-field="memory">{{ laptop.memory }}</td>
+                                <td data-laptop-field="disk">{{ laptop.disk }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editLaptop" onclick="currentEdit({{ laptop.id }})">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addLaptop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Добавление</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="save_number">Инв. номер</label>
+                    <input type="text" class="form-control" id="save_number">
+                    <label for="save_firm">Фирма</label>
+                    <input type="text" class="form-control" id="save_firm">
+                    <label for="save_model">Модель</label>
+                    <input type="text" class="form-control" id="save_model">
+                    <label for="save_date_buy">Дата покупки</label>
+                    <input type="text" class="form-control datetimepicker-input" id="save_date_buy" data-toggle="datetimepicker" data-target="#save_date_buy"/>
+                    <label for="save_interval">Срок службы (в годах)</label>
+                    <input type="number" class="form-control" id="save_interval"/>
+                    <label for="save_cores">Кол-во ядер</label>
+                    <input type="number" class="form-control" id="save_cores">
+                    <label for="save_memory">Память (GB)</label>
+                    <input type="number" class="form-control" id="save_memory">
+                    <label for="save_disk">Жесткий диск (GB)</label>
+                    <input type="number" class="form-control" id="save_disk">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button id="laptop_save_button" type="button" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editLaptop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Изменение</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit_number">Инв. номер</label>
+                    <input type="text" class="form-control" id="edit_number">
+                    <label for="edit_firm">Фирма</label>
+                    <input type="text" class="form-control" id="edit_firm">
+                    <label for="edit_model">Модель</label>
+                    <input type="text" class="form-control" id="edit_model">
+                    <label for="edit_date_buy">Дата покупки</label>
+                    <input type="text" class="form-control datetimepicker-input" id="edit_date_buy" data-toggle="datetimepicker" data-target="#edit_date_buy"/>
+                    <label for="edit_interval">Срок службы (в годах)</label>
+                    <input type="text" class="form-control" id="edit_interval"/>
+                    <label for="edit_cores">Кол-во ядер</label>
+                    <input type="number" class="form-control" id="edit_cores">
+                    <label for="edit_memory">Память (GB)</label>
+                    <input type="number" class="form-control" id="edit_memory">
+                    <label for="edit_disk">Жесткий диск (GB)</label>
+                    <input type="number" class="form-control" id="edit_disk">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                <button id="laptop_edit_button" type="button" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap.bundle.js"></script>
+<script src="/js/moment.js"></script>
+<script src="/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="/js//custom.laptop.js"></script>
+</body>
+</html>
