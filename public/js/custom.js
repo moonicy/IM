@@ -31,8 +31,7 @@ $("#employee_save_button").click(function() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-            $("#employee-table").prepend("<tr data-employee-id=\"" + data.id +  "\"> <td>" + data.id + "</td> <td>" + data.fio + "</td> <td>" + data.position + "</td> "
-             + "<td><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#editEmployee\" onclick=\"currentEdit(" + data.id + ")\">Edit</button></td></tr>");
+            location.reload();
         },
         failure: function(errMsg) {
             alert(errMsg);
@@ -58,13 +57,7 @@ $("#employee_edit_button").click(function() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-            $("#edit_fio").val(data.fio)
-            $("#edit_position").val(data.position)
-
-            var tr = $("tr[data-employee-id='" + currentEditEntityId + "']");
-
-            tr.find("td[data-employee-field=\"fio\"]").text(data.fio)
-            tr.find("td[data-employee-field=\"position\"]").text(data.position)
+            location.reload();
         },
         failure: function(errMsg) {
             console.error(errMsg);
