@@ -64,7 +64,7 @@
                     <tbody id="laptop-table">
                         {% for laptop in laptops %}
                             <tr data-laptop-id="{{ laptop.id }}">
-                                <td data-laptop-field="number">{{ laptop.number }}</td>
+                                <td data-laptop-field="number"><a href="/laptop/{{ laptop.id }}/status">{{ laptop.number }}</a></td>
                                 <td data-laptop-field="firm">{{ laptop.firm }}</td>
                                 <td data-laptop-field="model">{{ laptop.model }}</td>
                                 <td data-laptop-field="dateBuy">{{ laptop.dateBuy|date('Y-m-d') }}</td>
@@ -146,9 +146,9 @@
                     <label for="edit_interval">Срок службы (в годах)</label>
                     <input type="text" class="form-control" id="edit_interval"/>
                     <label for="edit_cores">Кол-во ядер</label>
-                    <input type="number" class="form-control" id="edit_cores">
+                    <input type="number" min="0" class="form-control" id="edit_cores">
                     <label for="edit_memory">Память (GB)</label>
-                    <input type="number" class="form-control" id="edit_memory">
+                    <input type="number" min="0" class="form-control" id="edit_memory">
                     <label for="edit_disk">Жесткий диск (GB)</label>
                     <input type="number" class="form-control" id="edit_disk">
                 </div>
