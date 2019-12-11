@@ -40,7 +40,7 @@
 
             <h2>
                 Сотрудники
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmployee">
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Добавить сотрудника" data-target="#addEmployee">
                     <i class="fas fa-plus"></i>
                 </button>
             </h2>
@@ -59,7 +59,7 @@
                                 <td data-employee-field="fio">{{ employee.fio }}</td>
                                 <td data-employee-field="position">{{ employee.position }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editEmployee" onclick="currentEdit({{ employee.id }})">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Редактировать" data-target="#editEmployee" onclick="currentEdit({{ employee.id }})">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                 </td>
