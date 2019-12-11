@@ -9,7 +9,7 @@ function currentEdit(id) {
 
     var tr = $("tr[data-laptop-id='" + currentEditEntityId + "']");
 
-    $("#edit_number").val(tr.find("td[data-laptop-field=\"number\"]").text())
+    $("#edit_number").val(tr.find("td[data-laptop-field=\"number\"]").find("a").text())
     $("#edit_firm").val(tr.find("td[data-laptop-field=\"firm\"]").text())
     $("#edit_model").val(tr.find("td[data-laptop-field=\"model\"]").text())
     $("#edit_date_buy").val(tr.find("td[data-laptop-field=\"dateBuy\"]").text())
@@ -21,6 +21,11 @@ function currentEdit(id) {
 
 $(function () {
     $('#save_date_buy').datetimepicker({
+        timeZone: 'Europe/Moscow',
+        format: 'YYYY-MM-DD'
+    });
+
+    $('#edit_date_buy').datetimepicker({
         timeZone: 'Europe/Moscow',
         format: 'YYYY-MM-DD'
     });
@@ -56,11 +61,7 @@ $("#laptop_save_button").click(function() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-            $("#laptop-table").prepend("<tr data-employee-id=\"" + data.id +  "\"> <td>" + data.id + "</td><td>" + data.number
-                + "</td> <td>" + data.firm + "</td> <td>" + data.model + "</td>"
-                + "</td> <td>" + data.dateBuy + "</td> <td>" + data.interval + " days </td>"
-                + "</td> <td>" + data.numberCores + "</td> <td>" + data.memory + "</td> <td>" + data.disk + "</td> "
-                + "<td><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#editLaptop\" onclick=\"currentEdit(" + data.id + ")\">Edit</button></td></tr>");
+            location.reload();
         },
         failure: function(errMsg) {
             alert(errMsg);
@@ -98,27 +99,7 @@ $("#laptop_edit_button").click(function() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data) {
-            var interval = data.interval.match( /M\d+D/g ).join("").match( /\d+/g).join("")
-
-            $("#edit_number").val(data.number);
-            $("#edit_firm").val(data.firm);
-            $("#edit_model").val(data.model);
-            $("#edit_date_buy").val(data.dateBuy);
-            $("#edit_interval").val(interval);
-            $("#edit_cores").val(data.numberCores);
-            $("#edit_memory").val(data.memory);
-            $("#edit_disk").val(data.disk);
-
-            var tr = $("tr[data-laptop-id='" + currentEditEntityId + "']");
-
-            tr.find("td[data-laptop-field=\"number\"]").text(data.number)
-            tr.find("td[data-laptop-field=\"firm\"]").text(data.firm)
-            tr.find("td[data-laptop-field=\"model\"]").text(data.model)
-            tr.find("td[data-laptop-field=\"dateBuy\"]").text(data.dateBuy)
-            tr.find("td[data-laptop-field=\"interval\"]").text(interval + " days")
-            tr.find("td[data-laptop-field=\"numberCores\"]").text(data.numberCores)
-            tr.find("td[data-laptop-field=\"memory\"]").text(data.memory)
-            tr.find("td[data-laptop-field=\"disk\"]").text(data.disk)
+            location.reload();
         },
         failure: function(errMsg) {
             console.error(errMsg);

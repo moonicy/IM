@@ -39,10 +39,33 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Учет ноутбуков</h1>
             </div>
-
+            
+            
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="col-sm-3 my-1">
+                        <label for="laptopFirm" class="col-form-label-sm">Фирма</label>
+                        <select class="form-control form-control-sm" id="laptopFirm">
+                            <option>HP</option>
+                            <option>TOSHIBA</option>
+                            <option>MSI</option>
+                            <option>Lenova</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <label for="laptopDateBuy" class="col-form-label-sm">Дата покупки</label>
+                        
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <div class="form-group row">
+                            
+                        </div>
+                    </div>
+                </div>
+            </form>
             <h2>
                 Ноутбуки
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addLaptop">
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Добавить ноутбук" data-target="#addLaptop">
                     <i class="fas fa-plus"></i>
                 </button>
             </h2>
@@ -50,21 +73,21 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Инв. номер</th>
+                            <th>Инв. </br>номер</th>
                             <th>Фирма</th>
                             <th>Модель</th>
                             <th>Дата покупки</th>
                             <th>Срок службы </br>(в годах)</th>
-                            <th>Кол-во ядер</th>
-                            <th>Память (GB)</th>
-                            <th>Жесткий диск (GB)</th>
+                            <th>Кол-во </br>ядер</th>
+                            <th>Память </br>(GB)</th>
+                            <th>Жесткий </br>диск (GB)</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="laptop-table">
                         {% for laptop in laptops %}
                             <tr data-laptop-id="{{ laptop.id }}">
-                                <td data-laptop-field="number">{{ laptop.number }}</td>
+                                <td data-laptop-field="number"><a href="/laptop/{{ laptop.id }}/status">{{ laptop.number }}</a></td>
                                 <td data-laptop-field="firm">{{ laptop.firm }}</td>
                                 <td data-laptop-field="model">{{ laptop.model }}</td>
                                 <td data-laptop-field="dateBuy">{{ laptop.dateBuy|date('Y-m-d') }}</td>
@@ -73,8 +96,11 @@
                                 <td data-laptop-field="memory">{{ laptop.memory }}</td>
                                 <td data-laptop-field="disk">{{ laptop.disk }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editLaptop" onclick="currentEdit({{ laptop.id }})">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-target="#editLaptop" data-placement="bottom" title="Редактировать" onclick="currentEdit({{ laptop.id }})">
                                         <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-target="#appRespons" data-placement="bottom" title="Назначить ответственного" onclick="currentApp({{ laptop.id }})">
+                                        <i class="fas fa-chalkboard-teacher"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -146,9 +172,9 @@
                     <label for="edit_interval">Срок службы (в годах)</label>
                     <input type="text" class="form-control" id="edit_interval"/>
                     <label for="edit_cores">Кол-во ядер</label>
-                    <input type="number" class="form-control" id="edit_cores">
+                    <input type="number" min="0" class="form-control" id="edit_cores">
                     <label for="edit_memory">Память (GB)</label>
-                    <input type="number" class="form-control" id="edit_memory">
+                    <input type="number" min="0" class="form-control" id="edit_memory">
                     <label for="edit_disk">Жесткий диск (GB)</label>
                     <input type="number" class="form-control" id="edit_disk">
                 </div>
