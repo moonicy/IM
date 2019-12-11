@@ -31,6 +31,12 @@
                             Ноутбуки  <span class="sr-only">(current)</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/status">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                            Статусы
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -46,6 +52,7 @@
                     <div class="col-sm-3 my-1">
                         <label for="laptopFirm" class="col-form-label-sm">Фирма</label>
                         <select class="form-control form-control-sm" id="laptopFirm">
+                            <option></option>
                             <option>HP</option>
                             <option>TOSHIBA</option>
                             <option>MSI</option>
@@ -53,19 +60,24 @@
                         </select>
                     </div>
                     <div class="col-sm-3 my-1">
-                        <label for="laptopDateBuy" class="col-form-label-sm">Дата покупки</label>
-                        
+                        <label for="filter_date_buy" class="col-form-label-sm">Дата покупки</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datetimepicker-input" id="filter_date_buy" data-toggle="datetimepicker" data-target="#filter_date_buy"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="clear_filter_date_buy"><i class="fas fa-backspace"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-3 my-1">
-                        <div class="form-group row">
-                            
-                        </div>
+                        <button type="button" class="btn btn-primary" data-tooltip="tooltip" data-placement="bottom" title="Фильтровать" id="search">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </div>
             </form>
             <h2>
                 Ноутбуки
-                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Добавить ноутбук" data-target="#addLaptop">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-placement="bottom" title="Добавить ноутбук" data-target="#addLaptop">
                     <i class="fas fa-plus"></i>
                 </button>
             </h2>
@@ -96,7 +108,7 @@
                                 <td data-laptop-field="memory">{{ laptop.memory }}</td>
                                 <td data-laptop-field="disk">{{ laptop.disk }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-target="#editLaptop" data-placement="bottom" title="Редактировать" onclick="currentEdit({{ laptop.id }})">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#editLaptop" data-placement="bottom" title="Редактировать" onclick="currentEdit({{ laptop.id }})">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
                                     <button type="button" class="btn btn-primary" data-toggle="tooltip" data-target="#appRespons" data-placement="bottom" title="Назначить ответственного" onclick="currentApp({{ laptop.id }})">
