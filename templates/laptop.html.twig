@@ -50,14 +50,14 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Инв. номер</th>
+                            <th>Инв. </br>номер</th>
                             <th>Фирма</th>
                             <th>Модель</th>
                             <th>Дата покупки</th>
                             <th>Срок службы </br>(в годах)</th>
-                            <th>Кол-во ядер</th>
-                            <th>Память (GB)</th>
-                            <th>Жесткий диск (GB)</th>
+                            <th>Кол-во </br>ядер</th>
+                            <th>Память </br>(GB)</th>
+                            <th>Жесткий </br>диск (GB)</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -75,6 +75,9 @@
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editLaptop" onclick="currentEdit({{ laptop.id }})">
                                         <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#appRespons" onclick="currentApp({{ laptop.id }})">
+                                        <i class="fas fa-chalkboard-teacher"></i>
                                     </button>
                                 </td>
                             </tr>
