@@ -16,25 +16,12 @@ function currentEdit(id) {
 }
 
 $(function () {
-    $('#save_date_start').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
-
-    $('#save_date_end').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
-
-    $('#edit_date_start').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
-
-    $('#edit_date_end').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
+    for (var id of ['save_date_start', 'save_date_end', 'edit_date_start', 'edit_date_end']) {
+        $('#' + id).datetimepicker({
+            timeZone: 'Europe/Moscow',
+            format: 'YYYY-MM-DD'
+        });
+    }
 });
 
 $("#status_save_button").click(function() {

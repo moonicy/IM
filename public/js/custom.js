@@ -13,6 +13,10 @@ function currentEdit(id) {
     $("#edit_position").val(tr.find("td[data-employee-field=\"position\"]").text())
 }
 
+$(function () {
+    $('[data-tooltip="tooltip"]').tooltip()
+})
+
 $("#employee_save_button").click(function() {
     const fio = $("#save_fio").val();
     const position = $("#save_position").val();

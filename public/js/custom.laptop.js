@@ -2,12 +2,13 @@ function isEmpty (val) {
     return (val.length === 0 || !val.trim());
 }
 
-var currentEditEntityId = null
+let currentEditEntityId = null
+let datetimepickers = ['save_date_buy', 'edit_date_buy', 'filter_date_buy'];
 
 function currentEdit(id) {
     currentEditEntityId = id
 
-    var tr = $("tr[data-laptop-id='" + currentEditEntityId + "']");
+    let tr = $("tr[data-laptop-id='" + currentEditEntityId + "']");
 
     $("#edit_number").val(tr.find("td[data-laptop-field=\"number\"]").find("a").text())
     $("#edit_firm").val(tr.find("td[data-laptop-field=\"firm\"]").text())
@@ -20,15 +21,26 @@ function currentEdit(id) {
 }
 
 $(function () {
-    $('#save_date_buy').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
 
-    $('#edit_date_buy').datetimepicker({
-        timeZone: 'Europe/Moscow',
-        format: 'YYYY-MM-DD'
-    });
+    for (let id of datetimepickers) {
+        $('#' + id).datetimepicker({
+            timeZone: 'Europe/Moscow',
+            format: 'YYYY-MM-DD',
+        });
+    }
+
+    $('[data-tooltip="tooltip"]').tooltip()
+
+
+    let urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('dateBuy')) {
+        $("#filter_date_buy").val(urlParams.get('dateBuy'));
+    }
+
+    if (urlParams.has('firm')) {
+        $('#laptopFirm').val(urlParams.get('firm'))
+    }
 });
 
 $("#laptop_save_button").click(function() {
@@ -109,3 +121,43 @@ $("#laptop_edit_button").click(function() {
         }
     });
 });
+
+$("#search").click(function() {
+    let firm = $('#laptopFirm').children("option:selected").val()
+    let dateBuy = $("#filter_date_buy").val();
+
+    let url = new URL(window.location);
+
+    let urlParams = new URLSearchParams(window.location.search);
+    let newUrlParams = Object.assign({}, urlParams);
+
+    if (!isEmpty(firm)) {
+        if (!urlParams.has('firm') || firm != urlParams.get('firm')) {
+            urlParams.set('firm', firm);
+        }
+    } else {
+        if (urlParams.has('firm')) {
+            urlParams.delete('firm');
+        }
+    }
+
+    if (!isEmpty(dateBuy)) {
+        if (!urlParams.has('dateBuy') || dateBuy != urlParams.get('dateBuy')) {
+            urlParams.set('dateBuy', dateBuy);
+        }
+    } else {
+        if (urlParams.has('dateBuy')) {
+            urlParams.delete('dateBuy');
+        }
+    }
+
+    if (newUrlParams.toString() != urlParams.toString()) {
+        url.search = urlParams.toString()
+
+        location.replace(url.href)
+    }
+})
+
+$('#clear_filter_date_buy').click(function () {
+    $('#filter_date_buy').datetimepicker('clear')
+})

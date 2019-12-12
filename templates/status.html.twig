@@ -31,6 +31,12 @@
                             Ноутбуки
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                            Статусы
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -97,7 +103,11 @@
             </form>
 
             <h2>
-                Статус ноутбука {{ laptop.number }} [{{ laptop.firm }} / {{ laptop.model }}]
+                {% if laptop is defined %}
+                    Статус ноутбука {{ laptop.number }} [{{ laptop.firm }} / {{ laptop.model }}]
+                {% else %}
+                    Статусы
+                {% endif %}
             </h2>
             <div class="table-responsive">
                 <table class="table table-striped table-sm">
@@ -114,7 +124,7 @@
                     <tbody id="laptop-table">
                     {% for status in statuses %}
                         <tr data-status-id="{{ status.id }}">
-                        	<td data-status-field="firm" data-laptop-id="{{ laptop.id }}">{{ status.laptop.firm }} / {{ status.laptop.model }}</td>
+                        	<td data-status-field="firm" {% if laptop is defined %}data-laptop-id="{{ laptop.id }}"{% endif %}>{{ status.laptop.firm }} / {{ status.laptop.model }}</td>
                             <td data-status-field="employee" data-employee-id="{{ status.employee.id }}">{{ status.employee.fio }} / {{ status.employee.position }}</td>
                             <td data-status-field="status">{{ status.status }}</td>
                             <td data-status-field="dateStart">{{ status.dateStart|date('Y-m-d') }}</td>
@@ -221,7 +231,11 @@
 <script src="/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="/js//custom.status.js"></script>
 <script>
-    var currentLaptop = {{ laptop.id }};
+    {% if laptop is defined %}
+        var currentLaptop = {{ laptop.id }};
+    {% else %}
+        var currentLaptop = null;
+    {% endif %}
 </script>
 </body>
 </html>

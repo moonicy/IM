@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Repository\EmployeeRepository;
 use App\Repository\LaptopRepository;
 use App\Repository\StatusRepository;
+use DateTime;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,10 +30,31 @@ class ViewController extends AbstractController
     /**
      * @Route("laptop", name="laptop_view", methods={"GET"})
      */
-    public function laptop(LaptopRepository $laptopRepository): Response
+    public function laptop(Request $request, LaptopRepository $laptopRepository): Response
     {
+        $filter = [];
+
+        if ($request->query->has('firm')) {
+            $filter['firm'] = $request->query->get('firm');
+        }
+
+        if ($request->query->has('dateBuy')) {
+            $filter['dateBuy'] = new DateTime($request->query->get('dateBuy'), new DateTimeZone('Europe/Moscow'));
+        }
+
         return $this->render('laptop.html.twig', [
-            'laptops' => $laptopRepository->findBy([], ['id' => 'DESC']),
+            'laptops' => $laptopRepository->findBy($filter, ['id' => 'DESC']),
+        ]);
+    }
+
+    /**
+     * @Route("status", name="statuses_view", methods={"GET"})
+     */
+    public function statuses(StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
+    {
+        return $this->render('status.html.twig', [
+            'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
+            'statuses' => $statusRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 
