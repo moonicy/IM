@@ -83,7 +83,7 @@ $("#laptop_save_button").click(function() {
 
 $("#laptop_edit_button").click(function() {
     const number = $("#edit_number").val();
-    const firm = $("#edit_firm").val();
+    const firm = $("#edit_firm").children("option:selected").val();
     const model = $("#edit_model").val();
     const dateBuy = $("#edit_date_buy").val();
     const interval = $("#edit_interval").val();
