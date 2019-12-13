@@ -50,23 +50,45 @@ class ViewController extends AbstractController
     /**
      * @Route("status", name="statuses_view", methods={"GET"})
      */
-    public function statuses(StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
+    public function statuses(Request $request, StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
     {
-        return $this->render('status.html.twig', [
-            'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
-            'statuses' => $statusRepository->findBy([], ['id' => 'DESC']),
-        ]);
-    }
+        $filter = [];
 
-    /**
-     * @Route("laptop/{id}/status", name="laptop_status_view", methods={"GET"})
-     */
-    public function status(Request $request, StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
-    {
+        if ($request->query->has('firm')) {
+            $filter['laptop']['firm'] = $request->query->get('firm');
+        }
+
+        if ($request->query->has('number')) {
+            $filter['laptop']['number'] = $request->query->get('number');
+        }
+
+        if ($request->query->has('status')) {
+            $filter['status'] = $request->query->get('status');
+        }
+
+        if ($request->query->has('employee')) {
+            $filter['employee'] = $request->query->get('employee');
+        }
+
+        if ($request->query->has('dateStart')) {
+            $filter['dateStart'] = new DateTime($request->query->get('dateStart'), new DateTimeZone('Europe/Moscow'));
+        }
+
+        if ($request->query->has('dateEnd')) {
+            $filter['dateEnd'] = new DateTime($request->query->get('dateEnd'), new DateTimeZone('Europe/Moscow'));
+        }
+
+        if ($request->query->has('relevant')) {
+            $filter['relevant'] = $request->query->get('relevant');
+        }
+
+        if ($request->query->has('outdated')) {
+            $filter['outdated'] = $request->query->get('outdated');
+        }
+
         return $this->render('status.html.twig', [
             'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
-            'laptop' => $laptopRepository->find($request->get('id')),
-            'statuses' => $statusRepository->findBy(['laptop' => $request->get('id')], ['id' => 'DESC']),
+            'statuses' => $statusRepository->findByFilter($filter, ['id' => 'DESC']),
         ]);
     }
 }

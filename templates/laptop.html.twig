@@ -99,7 +99,7 @@
                     <tbody id="laptop-table">
                         {% for laptop in laptops %}
                             <tr data-laptop-id="{{ laptop.id }}">
-                                <td data-laptop-field="number"><a href="/laptop/{{ laptop.id }}/status">{{ laptop.number }}</a></td>
+                                <td data-laptop-field="number"><a href="/status?number={{ laptop.number|url_encode }}">{{ laptop.number }}</a></td>
                                 <td data-laptop-field="firm">{{ laptop.firm }}</td>
                                 <td data-laptop-field="model">{{ laptop.model }}</td>
                                 <td data-laptop-field="dateBuy">{{ laptop.dateBuy|date('Y-m-d') }}</td>
@@ -214,6 +214,7 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/moment.js"></script>
 <script src="/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="/js/common.js"></script>
 <script src="/js//custom.laptop.js"></script>
 </body>
 </html>

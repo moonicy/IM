@@ -1,8 +1,3 @@
-function isEmpty (val) {
-    return (val.length === 0 || !val.trim());
-}
-
-let currentEditEntityId = null
 let datetimepickers = ['save_date_buy', 'edit_date_buy', 'filter_date_buy'];
 
 function currentEdit(id) {
@@ -29,8 +24,7 @@ $(function () {
         });
     }
 
-    $('[data-tooltip="tooltip"]').tooltip()
-
+    $('[data-tooltip="tooltip"]').tooltip();
 
     let urlParams = new URLSearchParams(window.location.search);
 
@@ -131,25 +125,8 @@ $("#search").click(function() {
     let urlParams = new URLSearchParams(window.location.search);
     let newUrlParams = Object.assign({}, urlParams);
 
-    if (!isEmpty(firm)) {
-        if (!urlParams.has('firm') || firm != urlParams.get('firm')) {
-            urlParams.set('firm', firm);
-        }
-    } else {
-        if (urlParams.has('firm')) {
-            urlParams.delete('firm');
-        }
-    }
-
-    if (!isEmpty(dateBuy)) {
-        if (!urlParams.has('dateBuy') || dateBuy != urlParams.get('dateBuy')) {
-            urlParams.set('dateBuy', dateBuy);
-        }
-    } else {
-        if (urlParams.has('dateBuy')) {
-            urlParams.delete('dateBuy');
-        }
-    }
+    setUrlParam(urlParams, 'firm', firm);
+    setUrlParam(urlParams, 'dateBuy', dateBuy);
 
     if (newUrlParams.toString() != urlParams.toString()) {
         url.search = urlParams.toString()

@@ -49,6 +49,10 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-sm-3 my-1">
+                        <label for="filter_laptop_number" class="col-form-label-sm">Номер:</label>
+                        <input type="text" class="form-control" id="filter_laptop_number">
+                    </div>
+                    <div class="col-sm-3 my-1">
                         <label for="laptopFirm" class="col-form-label-sm">Фирма:</label>
                         <select class="form-control form-control-sm" id="laptopFirm">
                         	<option></option>
@@ -61,17 +65,19 @@
                     <div class="col-sm-3 my-1">
                         <label for="laptopStatus" class="col-form-label-sm">Статус:</label>
                         <select class="form-control form-control-sm" id="laptopStatus">
-                        	<option></option>
-                            <option>На складе</option>
-                            <option>В работе</option>
-                            <option>В ремонте</option>
+                            <option value=""></option>
+                            <option value="На складе">На складе</option>
+                            <option value="В работе">В работе</option>
+                            <option value="В ремонте">В ремонте</option>
                         </select>
                     </div>
                     <div class="col-sm-3 my-1">
-                        <label for="laptopFirm" class="col-form-label-sm">Ответственный:</label>
-                        <select class="form-control form-control-sm" id="laptopFirm">
+                        <label for="employee_fio" class="col-form-label-sm">Ответственный:</label>
+                        <select class="form-control form-control-sm" id="employee_fio">
                             <option></option>
-                            <option>Иванов Иван Иванович</option>
+                            {% for employee in employees %}
+                                <option value="{{ employee.fio }}">{{ employee.fio }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -80,25 +86,38 @@
                         <legend class="col-form-label col-sm-2 pt-0">Состояние:</legend>
 						<div class="col-sm-10">
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" name="gridRadios" id="gridRadios1" value="option1" checked>
-								<label class="form-check-label" for="gridRadios1">
-								Актуальные
-								</label>
+								<input class="form-check-input" type="checkbox" name="gridRadios" id="relevant">
+								<label class="form-check-label" for="relevant">Актуальные</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="checkbox" name="gridRadios" id="gridRadios2" value="option2">
-								<label class="form-check-label" for="gridRadios2">
-								Устаревшие
-								</label>
+								<input class="form-check-input" type="checkbox" name="gridRadios" id="outdated">
+								<label class="form-check-label" for="outdated">Устаревшие</label>
 							</div>
 						</div>
                     </div>
                     <div class="col-sm-3 my-1">
-                        Дата назначения
+                        <label for="filter_date_start" class="col-form-label-sm">Дата назначения</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datetimepicker-input" id="filter_date_start" data-toggle="datetimepicker" data-target="#filter_date_start"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="clear_filter_date_start"><i class="fas fa-backspace"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-3 my-1">
-                        Дата сдачи
+                        <label for="filter_date_end" class="col-form-label-sm">Дата сдачи</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datetimepicker-input" id="filter_date_end" data-toggle="datetimepicker" data-target="#filter_date_end"/>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="clear_filter_date_end"><i class="fas fa-backspace"></i></button>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="col-sm-3 my-1">
+                    <button type="button" class="btn btn-primary" data-tooltip="tooltip" data-placement="bottom" title="Фильтровать" id="search">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </form>
 
@@ -165,10 +184,10 @@
 
                     <label for="save_status">Ответственный</label>
                     <select class="form-control form-control-lg" id="save_status">
-                        <option value="Выдан">Выдан</option>
+                        <option value=""></option>
                         <option value="На складе">На складе</option>
-                        <option value="На ремонте">На ремонте</option>
-                        <option value="Утерен">Утерен</option>
+                        <option value="В работе">В работе</option>
+                        <option value="В ремонте">В ремонте</option>
                     </select>
 
                     <label for="save_date_start">Дата начала</label>
@@ -205,10 +224,10 @@
 
                     <label for="edit_status">Ответственный</label>
                     <select class="form-control form-control-lg" id="edit_status">
-                        <option value="Выдан">Выдан</option>
+                        <option value=""></option>
                         <option value="На складе">На складе</option>
-                        <option value="На ремонте">На ремонте</option>
-                        <option value="Утерен">Утерен</option>
+                        <option value="В работе">В работе</option>
+                        <option value="В ремонте">В ремонте</option>
                     </select>
 
                     <label for="edit_date_start">Дата начала</label>
@@ -229,6 +248,7 @@
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/moment.js"></script>
 <script src="/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="/js/common.js"></script>
 <script src="/js//custom.status.js"></script>
 <script>
     {% if laptop is defined %}

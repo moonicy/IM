@@ -1,13 +1,7 @@
-function isEmpty (val) {
-    return (val.length === 0 || !val.trim());
-}
-
-var currentEditEntityId = null
-
 function currentEdit(id) {
     currentEditEntityId = id
 
-    var tr = $("tr[data-employee-id='" + currentEditEntityId + "']");
+    let tr = $("tr[data-employee-id='" + currentEditEntityId + "']");
 
     $("#edit_fio").val(tr.find("td[data-employee-field=\"fio\"]").text())
     $("#edit_position").val(tr.find("td[data-employee-field=\"position\"]").text())
