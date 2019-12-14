@@ -30,19 +30,19 @@ $(function () {
     }
 
     if (urlParams.has('firm')) {
-        $('#laptopFirm').val(urlParams.get('firm'))
+        $('#laptopFirm').val(urlParams.get('firm'));
     }
 
     if (urlParams.has('number')) {
-        $('#filter_laptop_number').val(urlParams.get('number'))
+        $('#filter_laptop_number').val(urlParams.get('number'));
     }
 
     if (urlParams.has('status')) {
-        $('#laptopStatus').val(urlParams.get('status'))
+        $('#laptopStatus').val(urlParams.get('status'));
     }
 
     if (urlParams.has('employee')) {
-        $('#employee_fio').val(urlParams.get('employee'))
+        $('#employee_fio').val(urlParams.get('employee'));
     }
 
     if (urlParams.has('relevant')) {
@@ -154,9 +154,23 @@ $("#search").click(function() {
 })
 
 $('#clear_filter_date_start').click(function () {
-    $('#filter_date_start').datetimepicker('clear')
+    $('#filter_date_start').datetimepicker('clear');
 })
 
 $('#clear_filter_date_end').click(function () {
-    $('#filter_date_end').datetimepicker('clear')
+    $('#filter_date_end').datetimepicker('clear');
 })
+
+$('#filter-clear').click(function () {
+    $('#filter_date_start').datetimepicker('clear')
+    $('#filter_date_end').datetimepicker('clear');
+    $('#laptopFirm').val('');
+    $('#filter_laptop_number').val('');
+    $('#laptopStatus').val('');
+    $('#employee_fio').val('');
+    $('#relevant').prop('checked', false);
+    $('#outdated').prop('checked', false);
+
+
+    $("#search").click();
+});

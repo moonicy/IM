@@ -33,7 +33,11 @@ $(function () {
     }
 
     if (urlParams.has('firm')) {
-        $('#laptopFirm').val(urlParams.get('firm'))
+        $('#laptopFirm').val(urlParams.get('firm'));
+    }
+
+    if (urlParams.has('number')) {
+        $('#filter_laptop_number').val(urlParams.get('number'));
     }
 });
 
@@ -119,6 +123,7 @@ $("#laptop_edit_button").click(function() {
 $("#search").click(function() {
     let firm = $('#laptopFirm').children("option:selected").val()
     let dateBuy = $("#filter_date_buy").val();
+    let number = $('#filter_laptop_number').val();
 
     let url = new URL(window.location);
 
@@ -127,14 +132,25 @@ $("#search").click(function() {
 
     setUrlParam(urlParams, 'firm', firm);
     setUrlParam(urlParams, 'dateBuy', dateBuy);
+    setUrlParam(urlParams, 'number', number);
 
     if (newUrlParams.toString() != urlParams.toString()) {
         url.search = urlParams.toString()
 
         location.replace(url.href)
     }
-})
+});
 
 $('#clear_filter_date_buy').click(function () {
-    $('#filter_date_buy').datetimepicker('clear')
-})
+    $('#filter_date_buy').datetimepicker('clear');
+});
+
+$('#filter-clear').click(function () {
+    $('#filter_date_buy').datetimepicker('clear');
+
+    $('#laptopFirm').val('');
+
+    $('#filter_laptop_number').val('');
+
+    $("#search").click();
+});

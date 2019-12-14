@@ -42,6 +42,10 @@ class ViewController extends AbstractController
             $filter['dateBuy'] = new DateTime($request->query->get('dateBuy'), new DateTimeZone('Europe/Moscow'));
         }
 
+        if ($request->query->has('number')) {
+            $filter['number'] = $request->query->get('number');
+        }
+
         return $this->render('laptop.html.twig', [
             'laptops' => $laptopRepository->findBy($filter, ['id' => 'DESC']),
         ]);

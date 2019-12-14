@@ -50,6 +50,10 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-sm-3 my-1">
+                        <label for="filter_laptop_number" class="col-form-label-sm">Номер:</label>
+                        <input type="text" class="form-control" id="filter_laptop_number">
+                    </div>
+                    <div class="col-sm-3 my-1">
                         <label for="laptopFirm" class="col-form-label-sm">Фирма</label>
                         <select class="form-control form-control-sm" id="laptopFirm">
                             <option></option>
@@ -71,6 +75,9 @@
                     <div class="col-sm-3 my-1">
                         <button type="button" class="btn btn-primary" data-tooltip="tooltip" data-placement="bottom" title="Фильтровать" id="search">
                             <i class="fas fa-search"></i>
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-tooltip="tooltip" data-placement="bottom" title="Сбросить фильтры" id="filter-clear">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                 </div>
