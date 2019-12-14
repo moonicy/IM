@@ -22,11 +22,19 @@ class StatusRepository extends ServiceEntityRepository
         parent::__construct($registry, Status::class);
     }
 
-    public function findByFilter(array $filter)
+    public function findByFilter(array $filter, $limit = null, $offset = null)
     {
         $builder = $this
             ->createQueryBuilder('s')
             ->orderBy('s.id', 'DESC');
+
+        if (null !== $limit) {
+            $builder->setMaxResults($limit);
+        }
+
+        if (null !== $offset) {
+            $builder->setFirstResult($offset);
+        }
 
         if (isset($filter['status'])) {
             $builder
