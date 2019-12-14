@@ -22,10 +22,11 @@ class StatusRepository extends ServiceEntityRepository
         parent::__construct($registry, Status::class);
     }
 
-    public function findByFilter(array $filter, array $orderBy = null)
+    public function findByFilter(array $filter)
     {
         $builder = $this
-            ->createQueryBuilder('s');
+            ->createQueryBuilder('s')
+            ->orderBy('s.id', 'DESC');
 
         if (isset($filter['status'])) {
             $builder
@@ -87,6 +88,18 @@ class StatusRepository extends ServiceEntityRepository
         return $builder
             ->getQuery()
             ->getResult();
+    }
+
+    public function findLast($laptopId): ?Status
+    {
+        return $this
+            ->createQueryBuilder('s')
+            ->where('\'' . Laptop::class . '\' = :laptopId')
+            ->setParameter('laptopId', $laptopId)
+            ->orderBy('s.id',  'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     // /**

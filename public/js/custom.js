@@ -1,14 +1,14 @@
 function currentEdit(id) {
-    currentEditEntityId = id
+    currentEditEntityId = id;
 
     let tr = $("tr[data-employee-id='" + currentEditEntityId + "']");
 
-    $("#edit_fio").val(tr.find("td[data-employee-field=\"fio\"]").text())
-    $("#edit_position").val(tr.find("td[data-employee-field=\"position\"]").text())
+    $("#edit_fio").val(tr.find("td[data-employee-field=\"fio\"]").text());
+    $("#edit_position").val(tr.find("td[data-employee-field=\"position\"]").text());
 }
 
 $(function () {
-    $('[data-tooltip="tooltip"]').tooltip()
+    $('[data-tooltip="tooltip"]').tooltip();
 })
 
 $("#employee_save_button").click(function() {
@@ -61,7 +61,7 @@ $("#employee_edit_button").click(function() {
             console.error(errMsg);
         },
         finally: function() {
-            currentEditEntityId = null
+            currentEditEntityId = null;
         }
     });
 });

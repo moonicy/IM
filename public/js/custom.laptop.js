@@ -1,18 +1,24 @@
-let datetimepickers = ['save_date_buy', 'edit_date_buy', 'filter_date_buy'];
+let datetimepickers = ['save_date_buy', 'edit_date_buy', 'filter_date_buy', 'date_start'];
 
 function currentEdit(id) {
-    currentEditEntityId = id
+    currentEditEntityId = id;
 
     let tr = $("tr[data-laptop-id='" + currentEditEntityId + "']");
 
-    $("#edit_number").val(tr.find("td[data-laptop-field=\"number\"]").find("a").text())
-    $("#edit_firm").val(tr.find("td[data-laptop-field=\"firm\"]").text())
-    $("#edit_model").val(tr.find("td[data-laptop-field=\"model\"]").text())
-    $("#edit_date_buy").val(tr.find("td[data-laptop-field=\"dateBuy\"]").text())
-    $("#edit_interval").val(tr.find("td[data-laptop-field=\"interval\"]").text().match(/\d/g).join(""))
-    $("#edit_cores").val(tr.find("td[data-laptop-field=\"numberCores\"]").text())
-    $("#edit_memory").val(tr.find("td[data-laptop-field=\"memory\"]").text())
-    $("#edit_disk").val(tr.find("td[data-laptop-field=\"disk\"]").text())
+    $("#edit_number").val(tr.find("td[data-laptop-field=\"number\"]").find("a").text());
+    $("#edit_firm").val(tr.find("td[data-laptop-field=\"firm\"]").text());
+    $("#edit_model").val(tr.find("td[data-laptop-field=\"model\"]").text());
+    $("#edit_date_buy").val(tr.find("td[data-laptop-field=\"dateBuy\"]").text());
+    $("#edit_interval").val(tr.find("td[data-laptop-field=\"interval\"]").text().match(/\d/g).join(""));
+    $("#edit_cores").val(tr.find("td[data-laptop-field=\"numberCores\"]").text());
+    $("#edit_memory").val(tr.find("td[data-laptop-field=\"memory\"]").text());
+    $("#edit_disk").val(tr.find("td[data-laptop-field=\"disk\"]").text());
+}
+
+function currentAddEmployee(id, name) {
+    currentEditEntityId = id;
+
+    $("#laptop_name").text(name);
 }
 
 $(function () {
@@ -115,13 +121,13 @@ $("#laptop_edit_button").click(function() {
             console.error(errMsg);
         },
         finally: function() {
-            currentEditEntityId = null
+            currentEditEntityId = null;
         }
     });
 });
 
 $("#search").click(function() {
-    let firm = $('#laptopFirm').children("option:selected").val()
+    let firm = $('#laptopFirm').children("option:selected").val();
     let dateBuy = $("#filter_date_buy").val();
     let number = $('#filter_laptop_number').val();
 
@@ -134,10 +140,10 @@ $("#search").click(function() {
     setUrlParam(urlParams, 'dateBuy', dateBuy);
     setUrlParam(urlParams, 'number', number);
 
-    if (newUrlParams.toString() != urlParams.toString()) {
-        url.search = urlParams.toString()
+    if (newUrlParams.toString() !== urlParams.toString()) {
+        url.search = urlParams.toString();
 
-        location.replace(url.href)
+        location.replace(url.href);
     }
 });
 
@@ -154,3 +160,57 @@ $('#filter-clear').click(function () {
 
     $("#search").click();
 });
+
+$('#addEmployeeLaptop').click(function () {
+    const laptopId = currentEditEntityId;
+    const employeeId = $("#edit_employee").children("option:selected").val();
+    const status = 'В работе';
+    const dateStart = $("#date_start").val();
+
+    if (isEmpty(employeeId) || isEmpty(status) || isEmpty(dateStart)) {
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/api/status",
+        data: JSON.stringify({
+            employee: employeeId,
+            laptop: laptopId,
+            status: status,
+            dateStart: dateStart,
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data) {
+            location.reload();
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+});
+
+function toStatus (laptopId, employeeId, status) {
+    let now = new Date();
+    const dateStart = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+
+    $.ajax({
+        type: "POST",
+        url: "/api/status",
+        data: JSON.stringify({
+            employee: employeeId,
+            laptop: laptopId,
+            status: status,
+            dateStart: dateStart,
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data) {
+            location.reload();
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
+    });
+}

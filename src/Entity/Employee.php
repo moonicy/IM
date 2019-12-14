@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Employee
 {
+    const ROLE_ADMIN = 0;
+    const ROLE_EMPLOYEE = 1;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -25,6 +28,11 @@ class Employee
      * @ORM\Column(type="string", length=255)
      */
     private $position;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $role;
 
     public function getId(): ?int
     {
@@ -51,6 +59,18 @@ class Employee
     public function setPosition($position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    public function setRole($role): self
+    {
+        $this->role = $role;
 
         return $this;
     }

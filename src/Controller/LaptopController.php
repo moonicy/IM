@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Laptop;
+use App\Entity\Status;
+use App\Repository\EmployeeRepository;
 use App\Repository\LaptopRepository;
 use DateInterval;
 use DateTime;
@@ -28,17 +30,19 @@ class LaptopController extends AbstractController
     /**
      * @Route("", name="laptop_new", methods={"POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EmployeeRepository $employeeRepository, LaptopRepository $laptopRepository): Response
     {
         $laptop = new Laptop();
         $data = json_decode($request->getContent(), true);
 
         if (isset($data['number'], $data['firm'], $data['model'], $data['dateBuy'], $data['interval'], $data['numberCores'], $data['memory'], $data['disk'])) {
+            $date = new DateTime($data['dateBuy'], new DateTimeZone('Europe/Moscow'));
+
             $laptop
                 ->setNumber($data['number'])
                 ->setFirm($data['firm'])
                 ->setModel($data['model'])
-                ->setDateBuy(new DateTime($data['dateBuy'], new DateTimeZone('Europe/Moscow')))
+                ->setDateBuy($date)
                 ->setInterval(new DateInterval($data['interval']))
                 ->setNumberCores($data['numberCores'])
                 ->setMemory($data['memory'])
@@ -48,7 +52,21 @@ class LaptopController extends AbstractController
             $entityManager->persist($laptop);
             $entityManager->flush();
 
-            return $this->json($laptop, Response::HTTP_CREATED);
+            $laptopId = $laptop->getId();
+
+            $entityManager->clear();
+
+            $status = (new Status())
+                ->setEmployee($employeeRepository->findRootAdministrator())
+                ->setLaptop($laptopRepository->find($laptopId))
+                ->setStatus('На складе')
+                ->setDateStart($date)
+                ->setDateEnd(null);
+
+            $entityManager->persist($status);
+            $entityManager->flush();
+
+            return $this->json(null, Response::HTTP_CREATED);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);
@@ -83,7 +101,7 @@ class LaptopController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->json($laptop, Response::HTTP_CREATED);
+            return $this->json(null);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);

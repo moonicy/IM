@@ -30,7 +30,7 @@ class ViewController extends AbstractController
     /**
      * @Route("laptop", name="laptop_view", methods={"GET"})
      */
-    public function laptop(Request $request, LaptopRepository $laptopRepository): Response
+    public function laptop(Request $request, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
     {
         $filter = [];
 
@@ -48,13 +48,14 @@ class ViewController extends AbstractController
 
         return $this->render('laptop.html.twig', [
             'laptops' => $laptopRepository->findBy($filter, ['id' => 'DESC']),
+            'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 
     /**
      * @Route("status", name="statuses_view", methods={"GET"})
      */
-    public function statuses(Request $request, StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
+    public function statuses(Request $request, StatusRepository $statusRepository, EmployeeRepository $employeeRepository): Response
     {
         $filter = [];
 
@@ -92,7 +93,7 @@ class ViewController extends AbstractController
 
         return $this->render('status.html.twig', [
             'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
-            'statuses' => $statusRepository->findByFilter($filter, ['id' => 'DESC']),
+            'statuses' => $statusRepository->findByFilter($filter),
         ]);
     }
 }
