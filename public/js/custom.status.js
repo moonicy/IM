@@ -8,7 +8,7 @@ function currentEdit(id, laptopId) {
     $("#edit_laptop").val(tr.find("td[data-status-field=\"status\"]").text());
     $("#edit_date_start").val(tr.find("td[data-status-field=\"dateStart\"]").text());
     $("#edit_date_end").val(tr.find("td[data-status-field=\"dateEnd\"]").text());
-    $("#edit_status").val(tr.find("td[data-status-field=\"status\"]").text())
+    $("#edit_status").val(tr.find("td[data-status-field=\"status\"]").text());
 }
 
 $(function () {
@@ -30,19 +30,19 @@ $(function () {
     }
 
     if (urlParams.has('firm')) {
-        $('#laptopFirm').val(urlParams.get('firm'))
+        $('#laptopFirm').val(urlParams.get('firm'));
     }
 
     if (urlParams.has('number')) {
-        $('#filter_laptop_number').val(urlParams.get('number'))
+        $('#filter_laptop_number').val(urlParams.get('number'));
     }
 
     if (urlParams.has('status')) {
-        $('#laptopStatus').val(urlParams.get('status'))
+        $('#laptopStatus').val(urlParams.get('status'));
     }
 
     if (urlParams.has('employee')) {
-        $('#employee_fio').val(urlParams.get('employee'))
+        $('#employee_fio').val(urlParams.get('employee'));
     }
 
     if (urlParams.has('relevant')) {
@@ -52,38 +52,6 @@ $(function () {
     if (urlParams.has('outdated')) {
         $('#outdated').prop('checked', true);
     }
-});
-
-$("#status_save_button").click(function() {
-    const laptopId = currentLaptop;
-    const employeeId = $("#save_employee").children("option:selected").val();
-    const status = $("#save_status").children("option:selected").val();
-    const dateStart = $("#save_date_start").val();
-    const dateEnd = $("#save_date_end").val();
-
-    if (isEmpty(employeeId) || isEmpty(status) || isEmpty(dateStart) || isEmpty(dateEnd)) {
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "/api/status",
-        data: JSON.stringify({
-            employee: employeeId,
-            laptop: laptopId,
-            status: status,
-            dateStart: dateStart,
-            dateEnd: dateEnd
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(data) {
-            location.reload();
-        },
-        failure: function(errMsg) {
-            alert(errMsg);
-        }
-    });
 });
 
 $("#status_edit_button").click(function() {
@@ -123,14 +91,14 @@ $("#status_edit_button").click(function() {
 });
 
 $("#search").click(function() {
-    let firm = $('#laptopFirm').children("option:selected").val()
+    let firm = $('#laptopFirm').children("option:selected").val();
     let dateStart = $("#filter_date_start").val();
     let dateEnd = $("#filter_date_end").val();
     let number = $('#filter_laptop_number').val();
     let status = $('#laptopStatus').val();
-    let employee = $('#employee_fio').children("option:selected").val()
-    let relevant = $("#relevant").prop('checked')
-    let outdated = $("#outdated").prop('checked')
+    let employee = $('#employee_fio').children("option:selected").val();
+    let relevant = $("#relevant").prop('checked');
+    let outdated = $("#outdated").prop('checked');
 
     let url = new URL(window.location);
 
@@ -146,17 +114,31 @@ $("#search").click(function() {
     setUrlParam(urlParams, 'relevant', relevant ? 'true' : false);
     setUrlParam(urlParams, 'outdated', outdated ? 'true' : false);
 
-    if (newUrlParams.toString() != urlParams.toString()) {
-        url.search = urlParams.toString()
+    if (newUrlParams.toString() !== urlParams.toString()) {
+        url.search = urlParams.toString();
 
-        location.replace(url.href)
+        location.replace(url.href);
     }
-})
+});
 
 $('#clear_filter_date_start').click(function () {
-    $('#filter_date_start').datetimepicker('clear')
-})
+    $('#filter_date_start').datetimepicker('clear');
+});
 
 $('#clear_filter_date_end').click(function () {
-    $('#filter_date_end').datetimepicker('clear')
-})
+    $('#filter_date_end').datetimepicker('clear');
+});
+
+$('#filter-clear').click(function () {
+    $('#filter_date_start').datetimepicker('clear');
+    $('#filter_date_end').datetimepicker('clear');
+    $('#laptopFirm').val('');
+    $('#filter_laptop_number').val('');
+    $('#laptopStatus').val('');
+    $('#employee_fio').val('');
+    $('#relevant').prop('checked', false);
+    $('#outdated').prop('checked', false);
+
+
+    $("#search").click();
+});

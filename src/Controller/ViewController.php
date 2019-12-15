@@ -17,20 +17,26 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ViewController extends AbstractController
 {
+    const DEFAULT_LIMIT = 10;
+    const DEFAULT_OFFSET = 0;
+
     /**
      * @Route("", name="index_view", methods={"GET"})
      */
-    public function index(EmployeeRepository $employeeRepository): Response
+    public function index(Request $request, EmployeeRepository $employeeRepository): Response
     {
+        $pagination = $this->pagination($employeeRepository, $request, count($employeeRepository->findAll()));
+
         return $this->render('index.html.twig', [
-            'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
+            'pagination' => $pagination,
+            'employees' => $employeeRepository->findBy([], ['id' => 'DESC'], self::DEFAULT_LIMIT, $pagination['offset']),
         ]);
     }
 
     /**
      * @Route("laptop", name="laptop_view", methods={"GET"})
      */
-    public function laptop(Request $request, LaptopRepository $laptopRepository): Response
+    public function laptop(Request $request, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
     {
         $filter = [];
 
@@ -42,15 +48,24 @@ class ViewController extends AbstractController
             $filter['dateBuy'] = new DateTime($request->query->get('dateBuy'), new DateTimeZone('Europe/Moscow'));
         }
 
+        if ($request->query->has('number')) {
+            $filter['number'] = $request->query->get('number');
+        }
+
+        $collection = $laptopRepository->findBy($filter, ['id' => 'DESC'], self::DEFAULT_LIMIT, $this->getOffset($request));
+        $pagination = $this->pagination($collection, $request, count($laptopRepository->findBy($filter)));
+
         return $this->render('laptop.html.twig', [
-            'laptops' => $laptopRepository->findBy($filter, ['id' => 'DESC']),
+            'pagination' => $pagination,
+            'laptops' => $collection,
+            'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 
     /**
      * @Route("status", name="statuses_view", methods={"GET"})
      */
-    public function statuses(Request $request, StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
+    public function statuses(Request $request, StatusRepository $statusRepository, EmployeeRepository $employeeRepository): Response
     {
         $filter = [];
 
@@ -86,9 +101,51 @@ class ViewController extends AbstractController
             $filter['outdated'] = $request->query->get('outdated');
         }
 
+        $collection = $statusRepository->findByFilter($filter, self::DEFAULT_LIMIT, $this->getOffset($request));
+        $pagination = $this->pagination($collection, $request, count($statusRepository->findByFilter($filter)));
+
         return $this->render('status.html.twig', [
+            'pagination' => $pagination,
             'employees' => $employeeRepository->findBy([], ['id' => 'DESC']),
-            'statuses' => $statusRepository->findByFilter($filter, ['id' => 'DESC']),
+            'statuses' => $collection,
         ]);
+    }
+
+    private function pagination($collection, Request $request, $count)
+    {
+        $pages = ceil($count / self::DEFAULT_LIMIT);
+
+        $offset = $this->getOffset($request);
+
+        $pagination = [
+            'offset' => $offset,
+            'pages' => $pages,
+            'current' => ceil($offset / self::DEFAULT_LIMIT) + 1,
+            'limit' => self::DEFAULT_LIMIT,
+            'isShow' => $count > self::DEFAULT_LIMIT,
+        ];
+
+        $previous = $offset - self::DEFAULT_LIMIT;
+        if ($previous >= self::DEFAULT_OFFSET) {
+            $pagination['previous'] = $previous;
+        }
+
+        $next = $offset + self::DEFAULT_LIMIT;
+        if ($next < $count) {
+            $pagination['next'] = $next;
+        }
+
+        return $pagination;
+    }
+
+    private function getOffset(Request $request)
+    {
+        if ($request->query->has('offset')) {
+            $offset = $request->query->get('offset');
+        } else {
+            $offset = self::DEFAULT_OFFSET;
+        }
+
+        return $offset;
     }
 }

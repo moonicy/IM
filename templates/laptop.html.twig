@@ -50,6 +50,10 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-sm-3 my-1">
+                        <label for="filter_laptop_number" class="col-form-label-sm">Номер:</label>
+                        <input type="text" class="form-control" id="filter_laptop_number">
+                    </div>
+                    <div class="col-sm-3 my-1">
                         <label for="laptopFirm" class="col-form-label-sm">Фирма</label>
                         <select class="form-control form-control-sm" id="laptopFirm">
                             <option></option>
@@ -72,6 +76,9 @@
                         <button type="button" class="btn btn-primary" data-tooltip="tooltip" data-placement="bottom" title="Фильтровать" id="search">
                             <i class="fas fa-search"></i>
                         </button>
+                        <button type="button" class="btn btn-secondary" data-tooltip="tooltip" data-placement="bottom" title="Сбросить фильтры" id="filter-clear">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -93,6 +100,8 @@
                             <th>Кол-во </br>ядер</th>
                             <th>Память </br>(GB)</th>
                             <th>Жесткий </br>диск (GB)</th>
+                            <th>Статус</th>
+                            <th>Ответственый</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -107,18 +116,47 @@
                                 <td data-laptop-field="numberCores">{{ laptop.numberCores }}</td>
                                 <td data-laptop-field="memory">{{ laptop.memory }}</td>
                                 <td data-laptop-field="disk">{{ laptop.disk }}</td>
+                                <td data-laptop-field="status">{{ laptop.statuses|first.status }}</td>
+                                <td data-laptop-field="status">{{ laptop.statuses|first.employee.fio }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#editLaptop" data-placement="bottom" title="Редактировать" onclick="currentEdit({{ laptop.id }})">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-target="#appRespons" data-placement="bottom" title="Назначить ответственного" onclick="currentApp({{ laptop.id }})">
-                                        <i class="fas fa-chalkboard-teacher"></i>
-                                    </button>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#editLaptop" data-placement="bottom" title="Редактировать" onclick="currentEdit({{ laptop.id }})">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#employeeLaptop" data-placement="bottom" title="Назначить ответственного" onclick="currentAddEmployee({{ laptop.id }}, '{{ laptop.number }} ({{ laptop.firm }} / {{ laptop.model }})')">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#to_fix" data-placement="bottom" title="Перевести в ремонт" onclick="toStatus({{ laptop.id }}, {{ laptop.statuses|first.employee.id }}, 'В ремонте')">
+                                            <i class="fas fa-tools"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#to_warehouse" data-placement="bottom" title="Перести на склад"  onclick="toStatus({{ laptop.id }}, 1, 'На складе')">
+                                            <i class="fas fa-warehouse"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                {% if pagination.isShow %}
+                    <div class="d-flex justify-content-md-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if pagination.previous is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination(0)">First</a></li>{% endif %}
+                                {% if pagination.previous is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ pagination.previous }})">Previous</a></li>{% endif %}
+                                {% if pagination.current - 3 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 4) * pagination.limit }})">{{ pagination.current - 3 }}</a></li>{% endif %}
+                                {% if pagination.current - 2 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 3) * pagination.limit }})">{{ pagination.current - 2 }}</a></li>{% endif %}
+                                {% if pagination.current - 1 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 2) * pagination.limit }})">{{ pagination.current - 1 }}</a></li>{% endif %}
+                                <li class="page-item"><a class="page-link">{{ pagination.current }}</a></li>
+                                {% if pagination.current + 1 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current) * pagination.limit }})">{{ pagination.current + 1 }}</a></li>{% endif %}
+                                {% if pagination.current + 2 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current + 1) * pagination.limit }})">{{ pagination.current + 2 }}</a></li>{% endif %}
+                                {% if pagination.current + 3 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current + 2) * pagination.limit }})">{{ pagination.current + 3 }}</a></li>{% endif %}
+                                {% if pagination.next is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ pagination.next }})">Next</a></li>{% endif %}
+                                {% if pagination.current != pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.pages - 1) * pagination.limit }})">Last</a></li>{% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
             </div>
         </main>
     </div>
@@ -205,6 +243,35 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
                 <button id="laptop_edit_button" type="button" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="employeeLaptop" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Назначение ответственного <br>для ноутбука <b id="laptop_name"></b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit_employee">Ответственный</label>
+                    <select class="form-control form-control-lg" id="edit_employee">
+                        {% for employee in employees %}
+                            <option value="{{ employee.id }}">{{ employee.fio }} / {{ employee.position }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="edit_date_start">Дата начала</label>
+                    <input type="text" class="form-control datetimepicker-input" id="date_start" data-toggle="datetimepicker" data-target="#date_start"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                <button id="addEmployeeLaptop" type="button" class="btn btn-primary">Сохранить</button>
             </div>
         </div>
     </div>

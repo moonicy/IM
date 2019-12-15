@@ -36,24 +36,32 @@ class StatusController extends AbstractController
     /**
      * @Route("", name="status_new", methods={"POST"})
      */
-    public function new(Request $request, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
+    public function new(Request $request, StatusRepository $statusRepository, LaptopRepository $laptopRepository, EmployeeRepository $employeeRepository): Response
     {
         $status = new Status();
         $data = json_decode($request->getContent(), true);
 
-        if (isset($data['employee'], $data['laptop'], $data['status'], $data['dateStart'], $data['dateEnd'])) {
+        if (isset($data['employee'], $data['laptop'], $data['status'], $data['dateStart'])) {
+            $last = $statusRepository->findLast($data['laptop']);
+
+            $dateStart = new DateTime($data['dateStart']);
+
             $status
                 ->setEmployee($employeeRepository->find($data['employee']))
                 ->setLaptop($laptopRepository->find($data['laptop']))
                 ->setStatus($data['status'])
-                ->setDateStart(new DateTime($data['dateStart']))
-                ->setDateEnd(new DateTime($data['dateEnd']));
+                ->setDateStart($dateStart)
+                ->setDateEnd(isset($data['dateEnd']) ? new DateTime($data['dateEnd']) : null);
+
+            if ($last instanceof Status) {
+                $last->setDateEnd($dateStart);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($status);
             $entityManager->flush();
 
-            return $this->json($status, Response::HTTP_CREATED);
+            return $this->json(null, Response::HTTP_CREATED);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);
@@ -85,7 +93,7 @@ class StatusController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            return $this->json($status, Response::HTTP_CREATED);
+            return $this->json(null);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);

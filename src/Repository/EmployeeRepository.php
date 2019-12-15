@@ -19,6 +19,11 @@ class EmployeeRepository extends ServiceEntityRepository
         parent::__construct($registry, Employee::class);
     }
 
+    public function findRootAdministrator()
+    {
+        return $this->find(1);
+    }
+
     // /**
     //  * @return Employee[] Returns an array of Employee objects
     //  */

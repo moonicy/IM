@@ -118,6 +118,9 @@
                     <button type="button" class="btn btn-primary" data-tooltip="tooltip" data-placement="bottom" title="Фильтровать" id="search">
                         <i class="fas fa-search"></i>
                     </button>
+                    <button type="button" class="btn btn-secondary" data-tooltip="tooltip" data-placement="bottom" title="Сбросить фильтры" id="filter-clear">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </form>
 
@@ -157,6 +160,25 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {% if pagination.isShow %}
+                    <div class="d-flex justify-content-md-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                {% if pagination.previous is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination(0)">First</a></li>{% endif %}
+                                {% if pagination.previous is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ pagination.previous }})">Previous</a></li>{% endif %}
+                                {% if pagination.current - 3 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 4) * pagination.limit }})">{{ pagination.current - 3 }}</a></li>{% endif %}
+                                {% if pagination.current - 2 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 3) * pagination.limit }})">{{ pagination.current - 2 }}</a></li>{% endif %}
+                                {% if pagination.current - 1 > 0 %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current - 2) * pagination.limit }})">{{ pagination.current - 1 }}</a></li>{% endif %}
+                                <li class="page-item"><a class="page-link">{{ pagination.current }}</a></li>
+                                {% if pagination.current + 1 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current) * pagination.limit }})">{{ pagination.current + 1 }}</a></li>{% endif %}
+                                {% if pagination.current + 2 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current + 1) * pagination.limit }})">{{ pagination.current + 2 }}</a></li>{% endif %}
+                                {% if pagination.current + 3 <= pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.current + 2) * pagination.limit }})">{{ pagination.current + 3 }}</a></li>{% endif %}
+                                {% if pagination.next is defined %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ pagination.next }})">Next</a></li>{% endif %}
+                                {% if pagination.current != pagination.pages %}<li class="page-item"><a class="page-link" href="#" onclick="pagination({{ (pagination.pages - 1) * pagination.limit }})">Last</a></li>{% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
             </div>
         </main>
     </div>
@@ -222,7 +244,7 @@
                         {% endfor %}
                     </select>
 
-                    <label for="edit_status">Ответственный</label>
+                    <label for="edit_status">Статус</label>
                     <select class="form-control form-control-lg" id="edit_status">
                         <option value=""></option>
                         <option value="На складе">На складе</option>

@@ -30,16 +30,16 @@ class EmployeeController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (isset($data['fio'], $data['position'])) {
-            $employee = new Employee();
-            $employee
+            $employee = (new Employee())
                 ->setFio($data['fio'])
+                ->setRole(Employee::ROLE_EMPLOYEE)
                 ->setPosition($data['position']);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($employee);
             $entityManager->flush();
 
-            return $this->json($employee, Response::HTTP_CREATED);
+            return $this->json(null, Response::HTTP_CREATED);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);
@@ -67,7 +67,7 @@ class EmployeeController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->json($employee);
+            return $this->json(null);
         }
 
         return $this->json(null, Response::HTTP_BAD_REQUEST);

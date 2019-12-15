@@ -56,6 +56,11 @@ class Laptop
      */
     private $disk;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Status", mappedBy="laptop")
+     */
+    private $statuses;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,5 +160,21 @@ class Laptop
         $this->disk = $disk;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatuses()
+    {
+        return $this->statuses;
+    }
+
+    /**
+     * @param mixed $statuses
+     */
+    public function setStatuses($statuses): void
+    {
+        $this->statuses = $statuses;
     }
 }
