@@ -135,7 +135,8 @@
                 <table class="table table-striped table-sm">
                     <thead>
                     <tr>
-                        <th>Ноутбук</th>
+                        <th>Инв. номер</th>
+                        <th>Ноутбука</th>
                         <th>Ответственный</th>
                         <th>Статус</th>
                         <th>Дата назначения</th>
@@ -146,11 +147,12 @@
                     <tbody id="laptop-table">
                     {% for status in statuses %}
                         <tr data-status-id="{{ status.id }}">
+                        	<td data-status-field="number">{{ status.laptop.number }}</td>
                         	<td data-status-field="firm" {% if laptop is defined %}data-laptop-id="{{ laptop.id }}"{% endif %}>{{ status.laptop.firm }} / {{ status.laptop.model }}</td>
                             <td data-status-field="employee" data-employee-id="{{ status.employee.id }}">{{ status.employee.fio }} / {{ status.employee.position }}</td>
                             <td data-status-field="status">{{ status.status }}</td>
                             <td data-status-field="dateStart">{{ status.dateStart|date('Y-m-d') }}</td>
-                            <td data-status-field="dateEnd">{{ status.dateEnd|date('Y-m-d') }}</td>
+                            <td data-status-field="dateEnd">{% if null != status.dateEnd %}{{ status.dateEnd|date('Y-m-d') }}{% endif %}</td>
                             <td>
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editStatus" onclick="currentEdit({{ status.id }}, {{ status.laptop.id }})">
                                     <i class="fas fa-pencil-alt"></i>
