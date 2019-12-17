@@ -7,6 +7,7 @@ use App\Repository\EmployeeRepository;
 use App\Repository\LaptopRepository;
 use App\Repository\StatusRepository;
 use DateTime;
+use DateTimeZone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,16 +43,17 @@ class StatusController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (isset($data['employee'], $data['laptop'], $data['status'], $data['dateStart'])) {
-            $last = $statusRepository->findLast($data['laptop']);
+            $laptop = $laptopRepository->find($data['laptop']);
+            $last = $statusRepository->findLast($laptop);
 
-            $dateStart = new DateTime($data['dateStart']);
+            $dateStart = new DateTime($data['dateStart'], new DateTimeZone('Europe/Moscow'));
 
             $status
                 ->setEmployee($employeeRepository->find($data['employee']))
-                ->setLaptop($laptopRepository->find($data['laptop']))
+                ->setLaptop($laptop)
                 ->setStatus($data['status'])
                 ->setDateStart($dateStart)
-                ->setDateEnd(isset($data['dateEnd']) ? new DateTime($data['dateEnd']) : null);
+                ->setDateEnd(isset($data['dateEnd']) ? new DateTime($data['dateEnd'], new DateTimeZone('Europe/Moscow')) : null);
 
             if ($last instanceof Status) {
                 $last->setDateEnd($dateStart);
@@ -87,8 +89,8 @@ class StatusController extends AbstractController
                 ->setEmployee($employeeRepository->find($data['employee']))
                 ->setLaptop($laptopRepository->find($data['laptop']))
                 ->setStatus($data['status'])
-                ->setDateStart(new DateTime($data['dateStart']))
-                ->setDateEnd(new DateTime($data['dateEnd']));
+                ->setDateStart(new DateTime($data['dateStart']), new DateTimeZone('Europe/Moscow'))
+                ->setDateEnd(new DateTime($data['dateEnd']), new DateTimeZone('Europe/Moscow'));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();

@@ -98,12 +98,13 @@ class StatusRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findLast($laptopId): ?Status
+    public function findLast($laptop): ?Status
     {
         return $this
             ->createQueryBuilder('s')
-            ->where('\'' . Laptop::class . '\' = :laptopId')
-            ->setParameter('laptopId', $laptopId)
+            ->innerJoin(Laptop::class, 'l', 'with', 'l.id = s.laptop')
+            ->where('l.id = :laptopId')
+            ->setParameter('laptopId', $laptop->getId())
             ->orderBy('s.id',  'DESC')
             ->setMaxResults(1)
             ->getQuery()

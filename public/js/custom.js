@@ -9,6 +9,8 @@ function currentEdit(id) {
 
 $(function () {
     $('[data-tooltip="tooltip"]').tooltip();
+    $("#save_fio").val('');
+    $("#save_position").val('');
 })
 
 $("#employee_save_button").click(function() {
