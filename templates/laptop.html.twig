@@ -50,11 +50,11 @@
             <form>
                 <div class="form-row align-items-center">
                     <div class="col-sm-3 my-1">
-                        <label for="filter_laptop_number" class="col-form-label-sm">Номер:</label>
+                        <label for="filter_laptop_number" class="col-form-label-sm">Инв. номер:</label>
                         <input type="text" class="form-control" id="filter_laptop_number">
                     </div>
                     <div class="col-sm-3 my-1">
-                        <label for="laptopFirm" class="col-form-label-sm">Фирма</label>
+                        <label for="laptopFirm" class="col-form-label-sm">Фирма:</label>
                         <select class="form-control form-control-sm" id="laptopFirm">
                             <option></option>
                             <option>HP</option>
@@ -64,11 +64,24 @@
                         </select>
                     </div>
                     <div class="col-sm-3 my-1">
-                        <label for="filter_date_buy" class="col-form-label-sm">Дата покупки</label>
+                        <label for="filter_date_buy" class="col-form-label-sm">Дата покупки:</label>
                         <div class="input-group">
                             <input type="text" class="form-control datetimepicker-input" id="filter_date_buy" data-toggle="datetimepicker" data-target="#filter_date_buy"/>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="clear_filter_date_buy"><i class="fas fa-backspace"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 my-1">
+                        <legend class="col-form-label col-sm-2 pt-0">Состояние:</legend>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="gridRadios" id="relevant">
+                                <label class="form-check-label" for="relevant">Актуальные</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="gridRadios" id="outdated">
+                                <label class="form-check-label" for="outdated">Устаревшие</label>
                             </div>
                         </div>
                     </div>
@@ -96,9 +109,9 @@
                             <th>Фирма</th>
                             <th>Модель</th>
                             <th>Дата покупки</th>
-                            <th>Срок службы </br>(в годах)</th>
+                            <th>Срок аморт. </br>(в годах)</th>
                             <th>Кол-во </br>ядер</th>
-                            <th>Память </br>(GB)</th>
+                            <th>RAM </br>(GB)</th>
                             <th>Жесткий </br>диск (GB)</th>
                             <th>Статус</th>
                             <th>Ответственый</th>
@@ -129,7 +142,7 @@
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#to_fix" data-placement="bottom" title="Перевести в ремонт" onclick="toStatus({{ laptop.id }}, {{ laptop.statuses|first.employee.id }}, 'В ремонте')">
                                             <i class="fas fa-tools"></i>
                                         </button>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#to_warehouse" data-placement="bottom" title="Перести на склад"  onclick="toStatus({{ laptop.id }}, 1, 'На складе')">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-tooltip="tooltip" data-target="#to_warehouse" data-placement="bottom" title="Перевести на склад"  onclick="toStatus({{ laptop.id }}, 1, 'На складе')">
                                             <i class="fas fa-warehouse"></i>
                                         </button>
                                     </div>
@@ -161,7 +174,8 @@
         </main>
     </div>
     <div class="row justify-content-md-center align-items-start border-top">
-        <p class="text-monospace">Сделано студенткой группы з96э Краснощёковой Людмилой Михайловной</p>
+        <p class="text-monospace"><p class="text-monospace ">Выполнено студенткой группы з96э Краснощёковой Людмилой Михайловной
+        </br>В рамках дисциплины "Информационный менеджмент".</p>
     </div>
 </div>
 
@@ -191,11 +205,11 @@
                     <input type="text" class="form-control" id="save_model">
                     <label for="save_date_buy">Дата покупки</label>
                     <input type="text" class="form-control datetimepicker-input" id="save_date_buy" data-toggle="datetimepicker" data-target="#save_date_buy"/>
-                    <label for="save_interval">Срок службы (в годах)</label>
+                    <label for="save_interval">Срок аморт. (в годах)</label>
                     <input type="number" class="form-control" id="save_interval"/>
                     <label for="save_cores">Кол-во ядер</label>
                     <input type="number" class="form-control" id="save_cores">
-                    <label for="save_memory">Память (GB)</label>
+                    <label for="save_memory">RAM (GB)</label>
                     <input type="number" class="form-control" id="save_memory">
                     <label for="save_disk">Жесткий диск (GB)</label>
                     <input type="number" class="form-control" id="save_disk">
@@ -233,11 +247,11 @@
                     <input type="text" class="form-control" id="edit_model">
                     <label for="edit_date_buy">Дата покупки</label>
                     <input type="text" class="form-control datetimepicker-input" id="edit_date_buy" data-toggle="datetimepicker" data-target="#edit_date_buy"/>
-                    <label for="edit_interval">Срок службы (в годах)</label>
+                    <label for="edit_interval">Срок аморт. (в годах)</label>
                     <input type="text" class="form-control" id="edit_interval"/>
                     <label for="edit_cores">Кол-во ядер</label>
                     <input type="number" min="0" class="form-control" id="edit_cores">
-                    <label for="edit_memory">Память (GB)</label>
+                    <label for="edit_memory">RAM (GB)</label>
                     <input type="number" min="0" class="form-control" id="edit_memory">
                     <label for="edit_disk">Жесткий диск (GB)</label>
                     <input type="number" class="form-control" id="edit_disk">
