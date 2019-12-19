@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Laptop;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,32 +20,67 @@ class LaptopRepository extends ServiceEntityRepository
         parent::__construct($registry, Laptop::class);
     }
 
-    // /**
-    //  * @return Laptop[] Returns an array of Laptop objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByFilter(array $filter, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $builder = $this
+            ->createQueryBuilder('l')
+            ->orderBy('l.id', 'DESC');
 
-    /*
-    public function findOneBySomeField($value): ?Laptop
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
+        if (null !== $limit) {
+            $builder->setMaxResults($limit);
+        }
+
+        if (null !== $offset) {
+            $builder->setFirstResult($offset);
+        }
+
+        if (isset($filter['number'])) {
+            $builder
+                ->andWhere('l.number = :number')
+                ->setParameter('number', $filter['number']);
+        }
+
+        if (isset($filter['firm'])) {
+            $builder
+                ->andWhere('l.firm = :firm')
+                ->setParameter('firm', $filter['firm']);
+        }
+
+        if (isset($filter['dateBuy'])) {
+            $builder
+                ->andWhere('l.dateBuy = :dateBuy')
+                ->setParameter('dateBuy', $filter['dateBuy']);
+        }
+
+        $now = new DateTime();
+
+        if (isset($filter['relevant']) || isset($filter['outdated'])) {
+            $collections = $builder
+                ->getQuery()
+                ->getResult();
+
+            if (empty($collections) || (isset($filter['relevant']) && isset($filter['outdated']))) {
+                return $collections;
+            }
+
+            return array_filter($collections, function (Laptop $laptop) use ($filter, $now) {
+                /** @var DateTime $datetime */
+                $datetime = clone $laptop->getDateBuy();
+                $datetime->modify($laptop->getInterval()->format('+ %d days'));
+
+                if (isset($filter['relevant'])) {
+                    return $datetime < $now;
+                }
+
+                if (isset($filter['outdated'])) {
+                    /** @var DateTime $datetime */
+                    return $datetime > $now;
+                }
+            });
+        }
+
+        return $builder
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

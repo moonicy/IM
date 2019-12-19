@@ -45,6 +45,14 @@ $(function () {
     if (urlParams.has('number')) {
         $('#filter_laptop_number').val(urlParams.get('number'));
     }
+
+    if (urlParams.has('relevant')) {
+        $('#relevant').prop('checked', true);
+    }
+
+    if (urlParams.has('outdated')) {
+        $('#outdated').prop('checked', true);
+    }
 });
 
 $("#laptop_save_button").click(function() {
@@ -130,6 +138,8 @@ $("#search").click(function() {
     let firm = $('#laptopFirm').children("option:selected").val();
     let dateBuy = $("#filter_date_buy").val();
     let number = $('#filter_laptop_number').val();
+    let relevant = $("#relevant").prop('checked');
+    let outdated = $("#outdated").prop('checked');
 
     let url = new URL(window.location);
 
@@ -139,6 +149,8 @@ $("#search").click(function() {
     setUrlParam(urlParams, 'firm', firm);
     setUrlParam(urlParams, 'dateBuy', dateBuy);
     setUrlParam(urlParams, 'number', number);
+    setUrlParam(urlParams, 'relevant', relevant ? 'true' : false);
+    setUrlParam(urlParams, 'outdated', outdated ? 'true' : false);
 
     if (newUrlParams.toString() !== urlParams.toString()) {
         url.search = urlParams.toString();
@@ -153,12 +165,11 @@ $('#clear_filter_date_buy').click(function () {
 
 $('#filter-clear').click(function () {
     $('#filter_date_buy').datetimepicker('clear');
-
     $('#laptopFirm').val('');
-
     $('#filter_laptop_number').val('');
-
     $("#search").click();
+    $('#relevant').prop('checked', false);
+    $('#outdated').prop('checked', false);
 });
 
 $('#addEmployeeLaptop').click(function () {

@@ -81,16 +81,19 @@ class StatusRepository extends ServiceEntityRepository
 
         $now = new DateTime();
 
-        if (isset($filter['relevant'])) {
-            $builder
-                ->andWhere('s.dateEnd > :now')
-                ->setParameter('now', $now);
-        }
+        if (!isset($filter['relevant']) || !isset($filter['outdated'])) {
 
-        if (isset($filter['outdated'])) {
-            $builder
-                ->andWhere('s.dateEnd < :now')
-                ->setParameter('now', $now);
+            if (isset($filter['relevant'])) {
+                $builder
+                    ->andWhere('(s.dateEnd >= :now or s.dateEnd is null)')
+                    ->setParameter('now', $now);
+            }
+
+            if (isset($filter['outdated'])) {
+                $builder
+                    ->andWhere('s.dateEnd < :now')
+                    ->setParameter('now', $now);
+            }
         }
 
         return $builder
