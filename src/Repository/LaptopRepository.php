@@ -66,15 +66,15 @@ class LaptopRepository extends ServiceEntityRepository
             return array_filter($collections, function (Laptop $laptop) use ($filter, $now) {
                 /** @var DateTime $datetime */
                 $datetime = clone $laptop->getDateBuy();
-                $datetime->modify($laptop->getInterval()->format('+ %d days'));
+                $datetime->modify($laptop->getInterval()->format('+ %d years'));
 
                 if (isset($filter['relevant'])) {
-                    return $datetime < $now;
+                    return $datetime > $now;
                 }
 
                 if (isset($filter['outdated'])) {
                     /** @var DateTime $datetime */
-                    return $datetime > $now;
+                    return $datetime < $now;
                 }
             });
         }
