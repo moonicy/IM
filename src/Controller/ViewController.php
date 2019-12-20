@@ -52,8 +52,16 @@ class ViewController extends AbstractController
             $filter['number'] = $request->query->get('number');
         }
 
-        $collection = $laptopRepository->findBy($filter, ['id' => 'DESC'], self::DEFAULT_LIMIT, $this->getOffset($request));
-        $pagination = $this->pagination($collection, $request, count($laptopRepository->findBy($filter)));
+        if ($request->query->has('relevant')) {
+            $filter['relevant'] = $request->query->get('relevant');
+        }
+
+        if ($request->query->has('outdated')) {
+            $filter['outdated'] = $request->query->get('outdated');
+        }
+
+        $collection = $laptopRepository->findByFilter($filter,self::DEFAULT_LIMIT, $this->getOffset($request));
+        $pagination = $this->pagination($collection, $request, count($laptopRepository->findByFilter($filter)));
 
         return $this->render('laptop.html.twig', [
             'pagination' => $pagination,

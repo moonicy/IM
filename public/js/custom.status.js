@@ -61,7 +61,7 @@ $("#status_edit_button").click(function() {
     const dateStart = $("#edit_date_start").val();
     const dateEnd = $("#edit_date_end").val();
 
-    if (isEmpty(employeeId) || isEmpty(status) || isEmpty(dateStart) || isEmpty(dateEnd) || null === currentEditEntityId) {
+    if (isEmpty(employeeId) || isEmpty(status) || isEmpty(dateStart) || null === currentEditEntityId) {
         return;
     }
 
